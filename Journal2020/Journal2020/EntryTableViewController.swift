@@ -21,6 +21,7 @@ class EntryTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        sortEntries()
         
         tableView.reloadData()
     }
@@ -28,7 +29,7 @@ class EntryTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -42,7 +43,9 @@ class EntryTableViewController: UITableViewController {
         
         let entry = EntryController.sharedController.entriesArray[indexPath.row]
         
+        
         cell.textLabel?.text = entry.subject
+        cell.detailTextLabel?.text = "Updated at " + entry.dateToString()
         
         return cell
     }
@@ -56,6 +59,10 @@ class EntryTableViewController: UITableViewController {
     }
     */
 
+    func sortEntries() {
+        EntryController.sharedController.entriesArray = EntryController.sharedController.entriesArray.sorted(by: { $0.timestamp.compare($1.timestamp as Date) == ComparisonResult.orderedDescending })
+//        EntryController.sharedController.entriesArray = EntryController.sharedController.entriesArray.sorted(by: { $0.subject > $1.subject })
+    }
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -82,14 +89,28 @@ class EntryTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "editEntry" {
+            
+            if let entryViewController = segue.destination as? EntryViewController {
+                _ = entryViewController.view
+                
+                let indexPath = tableView.indexPathForSelectedRow
+                if let selectedRow = indexPath?.row {
+                    let entry = EntryController.sharedController.entriesArray[selectedRow]
+                    entryViewController.updateWithEntry(entry: entry)
+                }
+            }
+            
+            
+        }
+        
+        
     }
-    */
+
 
 }
