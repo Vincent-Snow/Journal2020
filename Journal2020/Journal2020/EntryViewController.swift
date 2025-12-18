@@ -28,7 +28,7 @@ class EntryViewController: UIViewController, UITextFieldDelegate, UITextViewDele
         
         self.navigationController?.popViewController(animated: true)
     }
-
+    
     
     @IBAction func clearEntryClicked(_ sender: Any) {
         titleOutlet.text = ""
